@@ -47,44 +47,49 @@ if(isset($_GET['id'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Jabatan</title>
+    <title>Print Jabatan UAM</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://uam.ac.id/wp-content/uploads/2022/07/logo_horizontal-768x307.png" type="image/x-icon">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
         h2 {
             text-align: center;
             margin-bottom: 30px;
-            color: #007bff;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            color: #4CAF50;
+            text-transform: uppercase;
+            letter-spacing: 3px;
         }
         .table-responsive {
             margin-bottom: 30px;
         }
         .table {
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0 15px;
             width: 100%;
         }
         .table th, .table td {
-            padding: 12px;
-            border: 1px solid #dee2e6;
+            padding: 20px;
             text-align: center;
-            vertical-align: middle;
         }
         .table thead th {
-            background-color: #007bff;
+            background-color: #4CAF50;
             color: #fff;
-            border-color: #007bff;
             cursor: pointer;
+            border: none;
         }
         .table tbody tr:nth-of-type(odd) {
             background-color: #f8f9fa;
@@ -92,34 +97,43 @@ if(isset($_GET['id'])){
         .table-hover tbody tr:hover {
             background-color: #e2e6ea;
         }
-        .table-bordered th, .table-bordered td {
-            border: 1px solid #dee2e6;
-        }
-        .table-light {
-            background-color: #fdfdfe;
-        }
-        .table-warning th, .table-warning td {
-            background-color: #ffeeba;
-        }
         .print-btn {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
+        }
+        .print-btn button {
+            padding: 15px 40px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .print-btn button:hover {
+            background-color: #45a049;
         }
         @media print {
             h2 {
                 text-align: left;
             }
             .table th, .table td {
-                border-color: #000 !important;
+                border: none !important;
+                padding: 15px;
             }
             .table thead th {
-                background-color: #000 !important;
+                background-color: #4CAF50 !important;
+            }
+            .table tbody tr:nth-of-type(odd) {
+                background-color: #f8f9fa !important;
             }
             .table-hover tbody tr:hover {
-                background-color: #ccc !important;
+                background-color: #e2e6ea !important;
             }
-            .table-warning th, .table-warning td {
-                background-color: #ffe !important;
+            body {
+                background-color: #fff !important;
+                color: #000 !important;
             }
             .print-btn {
                 display: none;
@@ -129,16 +143,47 @@ if(isset($_GET['id'])){
 </head>
 <body>
     <div class="container">
-        <h2>DATA JABATAN</h2>
+        <h2>DATA JABATAN UAM</h2>
+        <?php
+        $host = "localhost";
+        $user = "root";
+        $pass = "";
+        $db = "disposisiuam";
+
+        $koneksi = mysqli_connect($host, $user, $pass, $db);
+
+        if (!$koneksi) {
+            die("Koneksi ke database gagal: " . mysqli_connect_error());
+        }
+
+        if(isset($_GET['id'])){
+            $id = $_GET['id'];
+            $query = "SELECT * FROM jabatan WHERE idjab = ?";
+            $stmt = mysqli_prepare($koneksi, $query);
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+
+            if(mysqli_num_rows($result) > 0){
+                $data = mysqli_fetch_assoc($result);
+            } else {
+                echo "Data jabatan tidak ditemukan.";
+                exit;
+            }
+        } else {
+            echo "ID jabatan tidak diberikan.";
+            exit;
+        }
+        ?>
         <div class="table-responsive">
-            <table class="table table-light table-bordered table-hover table-warning">
+            <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th onclick="sortTable(0)">ID Jabatan</th>
                         <th onclick="sortTable(1)">Nama Jabatan</th>
                         <th onclick="sortTable(2)">Kode Jabatan</th>
                         <th onclick="sortTable(3)">Atasan</th>
-                        <th onclick="sortTable(4)">Tanggal</th>
+                        <th onclick="sortTable(4)">Tanggal Input</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -153,7 +198,7 @@ if(isset($_GET['id'])){
             </table>
         </div>
         <div class="print-btn">
-            <button class="btn btn-primary" onclick="window.print()">Print Sekarang</button>
+            <button onclick="window.print()">Print Sekarang</button>
         </div>
     </div>
 
@@ -197,4 +242,6 @@ if(isset($_GET['id'])){
     </script>
 </body>
 </html>
+
+
 
