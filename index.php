@@ -168,7 +168,7 @@ if (isset($_POST['update'])) {
         /* TABLE UTAMA BAGIAN AKSI */
         .table-warning tr .th-aksi-utama {
             /* width: 509px; */
-            width: 580px;
+            width: 520px;
         }
         
         .table .btn {
@@ -268,7 +268,7 @@ if (isset($_POST['update'])) {
                 </div>
                 <form class="search-form form-inline me-3" method="GET" action="index.php">
                     <div class="input-group">
-                        <input type="text" class="form-control search-input" placeholder="Cari Nama...." name="q" value="<?php echo isset($_GET['q']) ? $_GET['q'] : ''; ?>">
+                        <input type="text" class="form-control search-input" placeholder="Cari Berdasarkan Nama...." name="q" value="<?php echo isset($_GET['q']) ? $_GET['q'] : ''; ?>">
                         <button class="btn btn-primary" type="submit">🔎 Cari</button>
                     </div>
                 </form>
@@ -279,7 +279,7 @@ if (isset($_POST['update'])) {
 
             <div class="card-body card-wrap table-responsive">
                 <table class="table table-light table-bordered table-hover">
-                    <thead class="table-warning">
+                    <thead class="table-warning text-center">
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">ID Jabatan</th>
