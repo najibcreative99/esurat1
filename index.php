@@ -99,6 +99,16 @@ if (isset($_POST['update'])) {
         $error = "Silahkan masukkan semua data";
     }
 }
+
+
+if (isset($_POST["logout"])) {
+    session_unset();
+    session_destroy();
+    header("Location: http://192.168.100.238/login-register/login.php");
+    exit();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -273,7 +283,11 @@ if (isset($_POST['update'])) {
                     </div>
                 </form>
                 <button type="button" class="btn btn-success btn-tambah me-3" data-bs-toggle="modal" data-bs-target="#modalTambahData">➕ Tambah Data</button>
-                <button type="button" class="btn btn-danger btn-logout">Logout</button>
+                <form method="post" name="logout">
+                    <!-- Menggunakan ID untuk tombol logout -->
+                    <button type="button" class="btn btn-danger" id="btn-logout">Logout</button>
+                </form>
+
             </div>
 
 
@@ -447,6 +461,26 @@ if (isset($_POST['update'])) {
 
             $('#modalEditData').modal('hide');
         });
+        // Function untuk menampilkan konfirmasi saat logout
+        $('#btn-logout').click(function(){
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: "Apakah Anda yakin ingin logout?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Tidak'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna menekan Ya, logout
+                    // Lakukan pengalihan halaman ke halaman login
+                    window.location.href = 'http://192.168.100.238/login-register/login.php';
+                }
+            });
+        });
+
     </script>
 
 </body>
